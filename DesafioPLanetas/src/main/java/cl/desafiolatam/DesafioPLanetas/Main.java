@@ -91,7 +91,7 @@ public class Main {
 	venusPlaneta.setLunas(lunasVenus);
 	
 	
-	sistema.mostrarInfoPlanetas();
+	sistema.mostrarInfoPlanetasLunas();
 
 	
 	}
