@@ -48,7 +48,7 @@ public class Menu {
 		break;
 		
 		case 5:
-			//añadir caso
+			clienteServicio.exportar(clienteServicio.getListaClientes());
 			break;
 		}
 		

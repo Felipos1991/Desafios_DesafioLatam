@@ -1,13 +1,16 @@
 package Servicio;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Modelo.CategoriaEnum;
+
 import Modelo.CategoriaEnum.Categoria;
 import Modelo.Cliente;
 
@@ -61,21 +64,25 @@ public class ClienteServicio {
 		System.out.println("Ingrese años como Cliente: ");
 		String aniosCliente = sc.nextLine();
 
-		System.out.println("\n----------Cliente Agregado----------\n");
-
+		if(runCliente!=null && nombreCliente!=null && apellidoCliente!=null && aniosCliente!=null && !runCliente.equals("") && !nombreCliente.equals("") && !apellidoCliente.equals("") && !aniosCliente.equals("")){
+	
 		Cliente cliente = new Cliente();
 		cliente.setRunCliente(runCliente);
 		cliente.setNombreCliente(nombreCliente);
 		cliente.setApellidoCliente(apellidoCliente);
 		cliente.setAniosCliente(aniosCliente);
 		cliente.setEstado(Categoria.Activo.toString());
-
-		System.out.println(cliente);
+		
 		listaClientes.add(cliente);
+		System.out.println("\n----------Cliente Agregado----------\n");
+		}else {
+			System.out.println("Datos faltantes ingrese nuevamente al cliente");
+		}
+		
 	}
 
 	public ArrayList<Cliente> cargarClientes() {
-		String archivo = "src/ClientesImportados.csv";
+		String archivo = "src/DBClientes.csv";
 		ArrayList<Cliente> clientesARetornar = new ArrayList<Cliente>();
 
 		try {
@@ -186,12 +193,90 @@ public class ClienteServicio {
 
 						}
 					}
-					
+
 				}
 				if (verificador == true) {
 					System.out.println("\n******Cliente no encontrado******\n");
 				}
 			}
+		}
+	}
+
+	public void exportar(ArrayList<Cliente> listaClientes) {
+		Scanner ed = new Scanner(System.in);
+
+		System.out.println("------Exportar Datos------");
+		System.out.println("Seleccione el formato a exportar");
+		System.out.println("1.Formato csv");
+		System.out.println("2.Formato txt");
+
+		int opcion_exportar = ed.nextInt();
+		switch (opcion_exportar) {
+		case 1:
+
+			try {
+				File archivo = new File("src/DBClientes.csv");
+				
+				if (!archivo.exists()) {
+					archivo.createNewFile();
+					System.out.println("Archivo de exportación csv creado con éxito, vuelve a exportar datos"); 
+					break;
+				} else {
+					
+					FileWriter archivoWriter = new FileWriter(archivo);
+					BufferedWriter archivoBuff = new BufferedWriter(archivoWriter);
+
+					for (Cliente cliente : listaClientes) {
+						String lineaCliente = cliente.getRunCliente() + "," + cliente.getNombreCliente() + ","
+								+ cliente.getApellidoCliente() + "," + cliente.getAniosCliente() + ","
+								+ cliente.getEstado();
+						archivoBuff.write(lineaCliente);
+						archivoBuff.newLine();
+						
+					}
+					archivoBuff.close();
+					archivoWriter.close();
+				}
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Datos de clientes exportados correctamente en formato .csv");
+			break;
+		
+		case 2:
+			try {
+				File archivo = new File("src/DBClientes.txt");
+				
+				if (!archivo.exists()) {
+					archivo.createNewFile();
+					System.out.println("Archivo de exportación txt creado con éxito, vuelve a exportar datos"); 
+					break;
+				} else {
+					
+					FileWriter archivoWriter = new FileWriter(archivo);
+					BufferedWriter archivoBuff = new BufferedWriter(archivoWriter);
+
+					for (Cliente cliente : listaClientes) {
+						String lineaCliente = cliente.getRunCliente() + "," + cliente.getNombreCliente() + ","
+								+ cliente.getApellidoCliente() + "," + cliente.getAniosCliente() + ","
+								+ cliente.getEstado();
+						archivoBuff.write(lineaCliente);
+						archivoBuff.newLine();
+						
+					}
+					archivoBuff.close();
+					archivoWriter.close();
+				}
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Datos de clientes exportados correctamente en formato .txt");
+			break;
+
 		}
 	}
 }
